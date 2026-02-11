@@ -6,16 +6,16 @@ const manifest = [
         palette: { primary: "#c084fc", secondary: "#f472b6", accent: "#f3f4f6" },
         simulators: [
             {
-                title: "Necrotic Sanctum 3D",
-                file: "undead3d.html",
-                tags: ["3D", "Minecraft", "Advanced"],
-                description: "Spatial simulation of the graveyard grounds with voxel-minion manifestation and rituals."
-            },
-            {
                 title: "Undead Management Hub",
-                file: "undead.html",
+                file: "undead/undead.html",
                 tags: ["2D", "Strategic", "Core"],
                 description: "Tactical interface for managing mass horde growth, stasis, and complexity."
+            },
+            {
+                title: "Necrotic Sanctum 3D",
+                file: "undead/undead3d.html",
+                tags: ["3D", "Blocky", "Animated"],
+                description: "Spatial simulation of the graveyard grounds with voxel-minion manifestation and rituals."
             }
         ]
     },
@@ -31,7 +31,14 @@ const manifest = [
         name: "The Demons",
         description: "Abyssal summoning and infernal sacrifice mechanics.",
         palette: { primary: "#ef4444", secondary: "#000000", accent: "#f97316" },
-        simulators: []
+        simulators: [
+            {
+                title: "Demons Management Hub",
+                file: "demons/demons.html",
+                tags: ["2D", "Strategic", "Core"],
+                description: "Tactical interface for managing demons' bloodlust, portal upgrades, and complexity."
+            }
+        ]
     },
     {
         id: "elves",
@@ -98,7 +105,7 @@ function initPortal() {
                             ${faction.name}
                         </h2>
                         <span class="text-slate-500 font-mono text-[10px] uppercase tracking-[0.3em] mb-2">
-                            Status: ${hasSims ? 'Operational' : 'Synthesis Pending'}
+                            Status: ${hasSims ? 'Operational' : 'Inactive'}
                         </span>
                     </div>
 
@@ -109,7 +116,7 @@ function initPortal() {
                                 <div class="scanline" style="background: linear-gradient(0deg, ${faction.palette.primary}22 0%, transparent 100%)"></div>
 
                                 <div class="flex justify-between items-start mb-8 relative z-10">
-                                    <h3 class="text-2xl font-black text-white group-hover:text-white transition-colors leading-none" style="text-shadow: 0 0 20px ${faction.palette.primary}33">
+                                    <h3 class="text-2xl font-black text-white group-hover:text-white transition-colors leading-none" style="text-shadow: ${faction.palette.primary} 1px 1px 10px">
                                         ${sim.title}
                                     </h3>
                                     <div class="text-3xl transition-all duration-500 group-hover:translate-x-2" style="color: ${faction.palette.primary}">→</div>
@@ -134,8 +141,8 @@ function initPortal() {
                         `).join('') : `
                             <div class="glass-card p-10 opacity-20 grayscale border-dashed flex flex-col justify-center min-h-[200px]">
                                 <div class="text-slate-600 text-[10px] font-mono uppercase tracking-widest mb-4">Core Locked</div>
-                                <h3 class="text-xl font-bold text-slate-500 italic mb-2">No Active Stream</h3>
-                                <p class="text-slate-700 text-xs font-mono">ENCRYPTED_FACTION_DATA_PENDING</p>
+                                <h3 class="text-xl font-bold text-slate-500 italic mb-2">No Active Simulation</h3>
+                                <p class="text-stone-700 text-xs font-mono">DATA_PENDING</p>
                             </div>
                         `}
                     </div>

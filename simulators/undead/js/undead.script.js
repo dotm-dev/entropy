@@ -134,11 +134,10 @@ function render() {
     document.getElementById('pop-bar-predict').style.width = `${Math.min(100, predPercent)}%`;
     document.getElementById('pop-bar').style.backgroundColor = activeWeight > 80 ? '#ef4444' : activeWeight > 50 ? '#f59e0b' : '#4ade80';
 
-    document.getElementById('total-atk').innerText = totalAtk;
-    document.getElementById('total-hp').innerText = Math.ceil(totalHp);
+    document.getElementById('total-atk').innerText = String(totalAtk);
+    document.getElementById('total-hp').innerText = String(Math.ceil(totalHp));
 
-    const decayPerUnit = calculateDecayDmg(activeWeight);
-    document.getElementById('forecast-decay').innerText = decayPerUnit;
+    document.getElementById('forecast-decay').innerText = String(calculateDecayDmg(activeWeight));
     document.getElementById('forecast-spawn').innerText = `+${nextSpawn}`;
 
     ['Lich', 'Abomination', 'Knight', 'Ghoul', 'Skeleton'].forEach(row => document.getElementById(`row-${row}`).innerHTML = '');
@@ -227,10 +226,8 @@ function render() {
     document.getElementById('enemy-area').style.display = state.enemy ? 'block' : 'none';
 
     if (state.enemy) {
-        const enemyAtkTotal = state.enemy.units.reduce((sum, u) => sum + u.atk, 0);
-        const enemyHpTotal = state.enemy.units.reduce((sum, u) => sum + u.hp, 0);
-        document.getElementById('enemy-hp').innerText = enemyHpTotal;
-        document.getElementById('enemy-atk').innerText = enemyAtkTotal;
+        document.getElementById('enemy-hp').innerText = String(state.enemy.units.reduce((sum, u) => sum + u.hp, 0));
+        document.getElementById('enemy-atk').innerText = String(state.enemy.units.reduce((sum, u) => sum + u.atk, 0));
         const enemyList = document.getElementById('enemy-units-list');
         enemyList.innerHTML = '';
         state.enemy.units.forEach(u => {
