@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENTROPY: The Undead Sanctum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/undead.style.css">
+</head>
+<body class="flex flex-col items-center">
+
+    <div class="mist"></div>
+
+    <!-- HUD: LEFT Ritual Panel -->
+    <div class="glass-hud fixed top-6 left-6 p-6 rounded-sm w-80 border-t-2 border-t-purple-500">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="text-4xl text-purple-400">🔮</div>
+            <div>
+                <h1 class="font-black text-white text-xl leading-none uppercase tracking-tighter">The Sanctum</h1>
+                <p class="text-[9px] uppercase tracking-widest text-purple-700 font-bold">Horde Density & Rituals</p>
+            </div>
+        </div>
+
+        <div class="space-y-4 mb-14">
+            <div class="flex justify-between text-[11px] uppercase font-black text-slate-500">
+                <span>Vessel Capacity</span>
+                <span id="pop-weight-text" class="text-purple-400 font-mono">0 / 30</span>
+            </div>
+            <div class="relative h-4 bg-black rounded-sm border border-white/5 overflow-visible">
+                <div class="bar-tick" style="left: 50%"><div class="bar-tick-label">50%</div></div>
+                <div class="bar-tick" style="left: 80%"><div class="bar-tick-label">80%</div></div>
+                
+                <div class="absolute inset-0 overflow-hidden">
+                    <div id="pop-bar-predict" class="absolute h-full bg-green-900/30 transition-all duration-700" style="width: 0%"></div>
+                    <div id="pop-bar-stasis" class="absolute h-full bg-purple-600/40 transition-all duration-700" style="width: 0%"></div>
+                    <div id="pop-bar" class="absolute h-full bg-green-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="forecast-panel border-t border-white/5 pt-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[10px] uppercase font-black text-slate-600 tracking-widest font-sans">Growth</h3>
+                <div class="flex gap-1" id="intensity-controls">
+                    <span class="intensity-pill" onclick="setIntensity('low')" id="pill-low">LOW</span>
+                    <span class="intensity-pill" onclick="setIntensity('normal')" id="pill-normal">MED</span>
+                    <span class="intensity-pill" onclick="setIntensity('high')" id="pill-high">HIGH</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-black/40 p-3 text-center border border-white/5">
+                    <span class="text-[9px] text-slate-500 uppercase block mb-1">Rising</span>
+                    <span id="forecast-spawn" class="text-lg font-black text-green-400 font-mono">+0</span>
+                </div>
+                <div class="bg-black/40 p-3 text-center border border-white/5">
+                    <span class="text-[9px] text-slate-500 uppercase block mb-1">Rot</span>
+                    <span id="forecast-decay" class="text-lg font-black text-red-500 font-mono">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD: Top Header (Centered Icons) -->
+    <div id="phase-banner" class="phase-banner glass-hud">
+        <div class="flex items-center gap-3">
+            <span id="banner-atk-icon"></span>
+            <span id="total-atk" class="text-white font-black text-2xl font-mono">0</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span id="banner-hp-icon"></span>
+            <span id="total-hp" class="text-green-500 font-black text-2xl font-mono">0</span>
+        </div>
+        <div id="banner-context" class="ml-6 border-l border-white/10 pl-6 text-red-500 font-black text-sm hidden uppercase"></div>
+    </div>
+
+    <!-- HUD: Right Turn Counter -->
+    <div class="glass-hud fixed top-6 right-6 px-10 py-6 rounded-sm flex items-center gap-8 border-b-2 border-b-indigo-500">
+        <span class="text-xs text-slate-500 font-black uppercase tracking-widest font-sans">Turn</span>
+        <span id="turn-count" class="text-5xl font-black text-indigo-400 italic font-mono">1</span>
+    </div>
+
+    <!-- MAIN BATTLEFIELD -->
+    <main id="game-stage" class="battlefield">
+        <div class="rot-overlay" id="rot-pulse"></div>
+        <div id="row-Lich" class="unit-row"></div>
+        <div id="row-Abomination" class="unit-row"></div>
+        <div id="row-Knight" class="unit-row"></div>
+        <div id="row-Ghoul" class="unit-row"></div>
+        <div id="row-Skeleton" class="unit-row"></div>
+
+        <!-- Enemy Area -->
+        <div id="enemy-area" class="fixed right-6 top-48 z-10 hidden">
+            <div class="glass-hud p-6 rounded-sm text-center w-80 border-r-4 border-r-red-600">
+                <div class="text-red-600 text-3xl mb-2">⚔️</div>
+                <h4 class="text-[10px] font-black uppercase text-slate-300 mb-4 tracking-[0.2em]">Holy Bastion</h4>
+                
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <div class="bg-black/20 p-2 border border-white/5 flex items-center justify-center gap-2">
+                        <span id="enemy-hp-icon"></span>
+                        <span id="enemy-hp" class="text-red-500 font-mono text-lg font-black">0</span>
+                    </div>
+                    <div class="bg-black/20 p-2 border border-white/5 flex items-center justify-center gap-2">
+                        <span id="enemy-atk-icon"></span>
+                        <span id="enemy-atk" class="text-red-500 font-mono text-lg font-black">0</span>
+                    </div>
+                </div>
+
+                <div id="enemy-units-list" class="enemy-army-grid border-t border-white/5 pt-4"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- RITUAL TRAY (Bottom Centered) -->
+    <div class="ritual-tray">
+        <button id="merge-Ghoul" onclick="mergeUnit('Ghoul')" class="game-btn has-tooltip">
+            <div id="icon-ghoul-get" class="merge-preview-icon"></div>
+            <div class="text-[12px] font-black text-slate-300 uppercase">Ghoul</div>
+            <div id="label-ghoul-need"></div>
+            <div class="tooltip" id="tooltip-merge-Ghoul"></div>
+        </button>
+        <button id="merge-Knight" onclick="mergeUnit('Knight')" class="game-btn has-tooltip">
+            <div id="icon-knight-get" class="merge-preview-icon"></div>
+            <div class="text-[12px] font-black text-slate-300 uppercase">Knight</div>
+            <div id="label-knight-need"></div>
+            <div class="tooltip" id="tooltip-merge-Knight"></div>
+        </button>
+        <button id="merge-Abomination" onclick="mergeUnit('Abomination')" class="game-btn has-tooltip">
+            <div id="icon-abom-get" class="merge-preview-icon"></div>
+            <div class="text-[12px] font-black text-slate-300 uppercase">Abom</div>
+            <div id="label-abom-need"></div>
+            <div class="tooltip" id="tooltip-merge-Abomination"></div>
+        </button>
+        <button id="merge-Lich" onclick="mergeUnit('Lich')" class="game-btn has-tooltip">
+            <div id="icon-lich-get" class="merge-preview-icon"></div>
+            <div class="text-[12px] font-black text-purple-400 uppercase tracking-tighter">Lich</div>
+            <div id="label-lich-need"></div>
+            <div class="tooltip" id="tooltip-merge-Lich"></div>
+        </button>
+    </div>
+
+    <!-- FLOW TRAY (Bottom Right) -->
+    <div class="flow-tray">
+        <button id="btn-scout" onclick="spawnEnemy()" class="game-btn border-amber-900/50 text-amber-600 min-w-[240px]">
+            <div class="text-3xl">👁️</div>
+            <span class="text-[11px] font-black uppercase">Scout</span>
+        </button>
+        <button id="btn-end-turn" onclick="handleMainAction()" class="game-btn btn-action-main">
+            <span id="btn-end-text">END TURN</span>
+        </button>
+    </div>
+
+    <!-- LOG PANEL -->
+    <div id="game-logs" class="fixed bottom-8 left-8 glass-hud p-6 rounded-lg w-72 max-h-40 overflow-y-auto text-[11px] font-mono text-slate-500 space-y-2 border-l-2 border-l-indigo-700">
+        <div class="text-indigo-400 font-black uppercase mb-2 border-b border-white/5 pb-2">Necrotic Chronicle</div>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div id="game-over-screen">
+        <div class="game-over-title text-center text-7xl font-black text-red-600 uppercase tracking-widest mb-4">Horde Extinguished</div>
+        <p class="text-slate-500 font-bold uppercase tracking-[0.4em] mb-12 text-xl">The light has reclaimed the earth.</p>
+        <div class="text-center mb-16">
+            <div class="text-xs text-slate-600 uppercase font-black mb-2">Turns Endured</div>
+            <div id="stat-cycles" class="text-6xl font-black text-white italic font-mono">0</div>
+        </div>
+        <button onclick="resetGame()" class="px-24 py-6 bg-white text-black font-black uppercase tracking-[0.5em] text-xl hover:bg-purple-500 transition-colors duration-500 font-sans">
+            Reanimate
+        </button>
+    </div>
+
+    <script src="js/undead.script.js"></script>
+</body>
+</html>

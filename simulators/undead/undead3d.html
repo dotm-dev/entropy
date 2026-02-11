@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENTROPY 3D: The Necrotic Sanctum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="css/undead3d.style.css">
+</head>
+<body>
+
+<div id="three-container"></div>
+<div id="ui-overlay"></div>
+
+<!-- HUD -->
+<div id="phase-banner" class="phase-banner glass-hud">
+    <div class="flex items-center gap-2">
+        <span id="banner-atk-icon"></span>
+        <span id="total-atk" class="text-white font-black text-2xl font-mono">0</span>
+    </div>
+    <div class="flex items-center gap-2">
+        <span id="banner-hp-icon"></span>
+        <span id="total-hp" class="text-green-500 font-black text-2xl font-mono">0</span>
+    </div>
+    <div id="banner-context" class="ml-4 border-l border-white/10 pl-6 text-red-500 font-black text-sm hidden uppercase font-sans"></div>
+</div>
+
+<div class="glass-hud turn-panel">
+    <div class="text-[10px] uppercase font-black tracking-widest text-slate-300 mb-1">Ritual Cycle</div>
+    <div id="turn-count" class="text-5xl font-black text-green-400 font-mono italic">1</div>
+</div>
+
+<div class="glass-hud sanctum-panel">
+    <div class="flex justify-between text-[11px] uppercase font-black text-bone-white mb-2">
+        <span>Essence Capacity</span>
+        <span id="pop-weight-text" class="text-purple-400 font-mono">0 / 30</span>
+    </div>
+    <div class="relative h-6 bg-black rounded-sm border border-white/10 overflow-visible mb-12 mt-4">
+        <!-- Markers -->
+        <div class="bar-tick" style="left: 50%"><div class="bar-tick-label">50%</div></div>
+        <div class="bar-tick" style="left: 80%"><div class="bar-tick-label">80%</div></div>
+
+        <div class="absolute inset-0 overflow-hidden">
+            <div id="pop-bar-predict" class="absolute h-full bg-green-400/20 border-r border-green-400/40 transition-all duration-700" style="width: 0%"></div>
+            <div id="pop-bar-stasis" class="absolute h-full bg-purple-600/40 border-r border-purple-400/40 transition-all duration-700" style="width: 0%"></div>
+            <div id="pop-bar" class="absolute h-full bg-green-500 transition-all duration-700 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-4 pt-2">
+        <span class="text-[11px] font-black uppercase text-slate-200 font-sans tracking-widest">Growth</span>
+        <div class="flex gap-1">
+            <span class="intensity-pill" onclick="setIntensity('low')" id="pill-low">LOW</span>
+            <span class="intensity-pill" onclick="setIntensity('normal')" id="pill-normal">MED</span>
+            <span class="intensity-pill" onclick="setIntensity('high')" id="pill-high">HIGH</span>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 text-center font-mono">
+        <div class="bg-black/60 p-3 border border-white/10">
+            <div class="text-[9px] text-slate-400 uppercase font-black mb-1">Rising</div>
+            <div id="forecast-spawn" class="text-green-400 font-black text-xl">+0</div>
+        </div>
+        <div class="bg-black/60 p-3 border border-white/10">
+            <div class="text-[9px] text-slate-400 uppercase font-black mb-1">Blight</div>
+            <div id="forecast-decay" class="text-red-500 font-black text-xl">0</div>
+        </div>
+    </div>
+</div>
+
+<div id="enemy-area" class="glass-hud hidden">
+    <h4 class="text-[11px] font-black uppercase text-slate-200 mb-4 tracking-[0.2em] text-center font-sans">Garrison of Light</h4>
+    <div class="grid grid-cols-2 gap-2 mb-4 font-mono text-center">
+        <div class="bg-black/30 p-2 border border-white/5 flex items-center justify-center gap-2">
+            <span id="enemy-hp-icon"></span> <span id="enemy-hp" class="text-red-500 font-black text-xl">0</span>
+        </div>
+        <div class="bg-black/30 p-2 border border-white/5 flex items-center justify-center gap-2">
+            <span id="enemy-atk-icon"></span> <span id="enemy-atk" class="text-red-500 font-black text-xl">0</span>
+        </div>
+    </div>
+    <div id="enemy-units-list" class="grid grid-cols-4 gap-2"></div>
+</div>
+
+<div class="ritual-tray">
+    <button id="merge-Ghoul" onclick="mergeUnit('Ghoul')" class="game-btn has-tooltip">
+        <div id="icon-ghoul-get" class="unit-icon-small"></div>
+        <div class="text-xs font-black uppercase text-slate-200">Ghoul</div>
+        <div id="label-ghoul-need"></div>
+        <div class="tooltip" id="tooltip-merge-Ghoul"></div>
+    </button>
+    <button id="merge-Knight" onclick="mergeUnit('Knight')" class="game-btn has-tooltip">
+        <div id="icon-knight-get" class="unit-icon-small"></div>
+        <div class="text-xs font-black uppercase text-slate-200">Knight</div>
+        <div id="label-knight-need"></div>
+        <div class="tooltip" id="tooltip-merge-Knight"></div>
+    </button>
+    <button id="merge-Abomination" onclick="mergeUnit('Abomination')" class="game-btn has-tooltip">
+        <div id="icon-abom-get" class="unit-icon-small"></div>
+        <div class="text-xs font-black uppercase text-slate-200">Abom</div>
+        <div id="label-abom-need"></div>
+        <div class="tooltip" id="tooltip-merge-Abomination"></div>
+    </button>
+    <button id="merge-Lich" onclick="mergeUnit('Lich')" class="game-btn has-tooltip">
+        <div id="icon-lich-get" class="unit-icon-small"></div>
+        <div class="text-xs font-black uppercase text-purple-400">Lich</div>
+        <div id="label-lich-need"></div>
+        <div class="tooltip" id="tooltip-merge-Lich"></div>
+    </button>
+</div>
+
+<div class="flow-tray">
+    <button id="btn-scout" onclick="spawnEnemy()" class="game-btn btn-scout-theme">
+        <div class="text-3xl">👁️</div>
+        <span class="text-[11px] font-black uppercase tracking-widest">Scout Area</span>
+    </button>
+    <button id="btn-action-main" onclick="handleMainAction()" class="game-btn btn-action-main">
+        <span id="btn-end-text">END TURN</span>
+    </button>
+</div>
+
+<div id="log-container" class="glass-hud">
+    <div class="text-indigo-400 font-black uppercase mb-2 border-b border-white/10 pb-1 text-[10px] tracking-tighter">Necrotic Log</div>
+    <div id="game-logs"></div>
+</div>
+
+<div id="game-over-screen" class="glass-hud">
+    <h2 class="text-7xl font-black text-red-600 uppercase tracking-widest mb-4 text-center">Extinguished</h2>
+    <p class="text-slate-400 uppercase tracking-widest mb-10 text-center">Your essence returns to the void.</p>
+    <button onclick="location.reload()" class="px-20 py-5 bg-white text-black font-black uppercase text-xl hover:bg-purple-500 transition-all font-sans">Reanimate</button>
+</div>
+
+<script src="js/undead3d.script.js"></script>
+</body>
+</html>
