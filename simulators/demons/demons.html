@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENTROPY | The Infernal Legion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --hell-bg: #050202;
+            --lava-orange: #f97316;
+            --blood-red: #ef4444;
+            --fire-glow: rgba(239, 68, 68, 0.2);
+            --glass-bg: rgba(20, 10, 10, 0.85);
+        }
+
+        body {
+            background-color: var(--hell-bg);
+            color: #f3f4f6;
+            font-family: 'Crimson Pro', serif;
+            margin: 0;
+            background-image:
+                    radial-gradient(circle at 50% 120%, #450a0a 0%, #050202 70%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .blood-bar {
+            height: 8px;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .blood-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--lava-orange), var(--blood-red));
+            transition: width 0.5s ease;
+        }
+
+        .demon-btn {
+            background: #1a1111;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .demon-btn:hover:not(:disabled) {
+            border-color: var(--lava-orange);
+            background: #2a1a1a;
+            box-shadow: 0 0 15px var(--fire-glow);
+            transform: translateY(-2px);
+        }
+
+        .demon-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .warlord-glow {
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.1);
+            border-color: var(--lava-orange);
+        }
+
+        .pulsing-red { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #331111; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+<!-- Top Manifest Bar -->
+<header class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mb-8 gap-4">
+    <div>
+        <h1 class="text-4xl font-black uppercase tracking-tighter text-white">The Infernal Legion</h1>
+        <p class="text-orange-500 font-mono text-xs tracking-widest uppercase">Everything Shall Burn</p>
+    </div>
+    <div class="flex gap-8 bg-black/40 p-4 rounded border border-white/5 font-mono">
+        <div class="text-center">
+            <div class="text-[10px] text-slate-500 uppercase mb-1">Carnage Fuel</div>
+            <div id="ui-fuel" class="text-2xl font-black text-orange-400">0</div>
+        </div>
+        <div class="text-center">
+            <div class="text-[10px] text-slate-500 uppercase mb-1">Gate Tier</div>
+            <div id="ui-gate-tier" class="text-2xl font-black text-red-500 italic">I</div>
+        </div>
+        <div class="text-center">
+            <div class="text-[10px] text-slate-500 uppercase mb-1">Cycle</div>
+            <div id="ui-turn" class="text-2xl font-black text-white">1</div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- Left Panel: Warlord & Momentum -->
+    <div class="lg:col-span-3 space-y-6">
+        <div class="glass-panel p-6 rounded-lg warlord-glow">
+            <h2 class="text-xl font-black uppercase mb-4 text-orange-500">The Warlord</h2>
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-5xl">👿</div>
+                <div class="text-right">
+                    <div class="text-3xl font-black text-white" id="wl-atk">3⚔</div>
+                    <div class="text-sm text-slate-400" id="wl-hp">3 / 3 ♥</div>
+                </div>
+            </div>
+
+            <div class="space-y-4 pt-4 border-t border-white/5">
+                <div class="flex justify-between text-xs uppercase font-bold tracking-widest text-slate-400">
+                    <span>Bloodlust</span>
+                    <span id="lust-status" class="text-orange-400">Stable</span>
+                </div>
+                <div class="blood-bar">
+                    <div id="lust-bar" class="blood-fill" style="width: 100%"></div>
+                </div>
+                <p id="lust-desc" class="text-[11px] text-slate-500 italic leading-relaxed">
+                    The Legion is sated. Internal order is maintained.
+                </p>
+            </div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-lg">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Warp Queue</h3>
+            <div id="warp-list" class="space-y-2 max-h-48 overflow-y-auto">
+                <!-- Warping units -->
+                <div class="text-xs text-slate-600 italic">Portal is silent...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center: The Deathball (Active Army) -->
+    <div class="lg:col-span-6 space-y-6">
+        <div class="flex justify-between items-end px-2">
+            <h2 class="text-2xl font-black uppercase tracking-tight">The Deathball</h2>
+            <div class="text-xs font-mono text-slate-500">Total Power: <span id="total-power" class="text-red-500 font-bold">0</span></div>
+        </div>
+
+        <div id="army-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Unit cards injected here -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-4 pt-4">
+            <button onclick="scoutEnemy()" id="btn-scout" class="demon-btn p-4 rounded-lg flex flex-col items-center">
+                <span class="text-2xl mb-1">👁️</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-orange-400">Scout Node</span>
+            </button>
+            <button onclick="endTurn()" id="btn-turn" class="demon-btn p-4 rounded-lg btn-action-main font-black uppercase tracking-widest text-white">
+                End Turn
+            </button>
+        </div>
+    </div>
+
+    <!-- Right Panel: Hellgate Spawning -->
+    <div class="lg:col-span-3 space-y-6">
+        <div class="glass-panel p-6 rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-black uppercase text-red-500">Hellgate</h2>
+                <div class="bg-red-950/50 px-2 py-1 rounded text-[10px] font-bold text-red-400" id="ui-capacity">
+                    CAPACITY: 1/1
+                </div>
+            </div>
+
+            <div id="recruitment-list" class="space-y-4">
+                <!-- Spawning buttons here -->
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/5">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold uppercase text-slate-500">Upgrade Gate</span>
+                    <span class="text-xs font-mono text-orange-400" id="upgrade-cost">Cost: 10 Fuel</span>
+                </div>
+                <button id="btn-upgrade" onclick="upgradeGate()" class="demon-btn w-full py-2 rounded text-[10px] font-black uppercase tracking-widest text-white disabled:opacity-20">
+                    Burst Through
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-lg border-dashed border-orange-900/30">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Sacrificial Rites</h3>
+            <div id="sacrifice-zone" class="text-center p-4 border border-white/5 rounded bg-black/20">
+                <p class="text-[10px] text-slate-600 mb-4 italic">Feed the Warlord to increase his eternal hunger.</p>
+                <button onclick="enterSacrificeMode()" id="btn-sac-mode" class="text-[10px] font-bold text-red-500 underline decoration-red-900 underline-offset-4">Select Vessel</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Conflict Modal (Simple placeholder for 2D) -->
+<div id="conflict-screen" class="fixed inset-0 bg-black/95 z-[500] hidden flex-col items-center justify-center p-8">
+    <h2 class="text-6xl font-black uppercase text-red-600 mb-8 italic">Conflict Active</h2>
+    <div class="grid grid-cols-2 gap-12 max-w-4xl w-full mb-12">
+        <div class="text-center p-8 glass-panel rounded border-red-500/50">
+            <div class="text-4xl mb-4">🔥</div>
+            <div class="text-xs uppercase text-slate-500 mb-2">Your Army</div>
+            <div id="conf-p-pwr" class="text-5xl font-black text-white">0</div>
+        </div>
+        <div class="text-center p-8 glass-panel rounded border-blue-500/50">
+            <div class="text-4xl mb-4">🛡️</div>
+            <div class="text-xs uppercase text-slate-500 mb-2">Enemy Garrison</div>
+            <div id="conf-e-pwr" class="text-5xl font-black text-white">0</div>
+        </div>
+    </div>
+    <button onclick="resolveCombat()" class="demon-btn px-20 py-5 text-xl font-black uppercase tracking-widest text-white pulsing-red">Clash</button>
+</div>
+
+<!-- Log -->
+<div id="log-container" class="glass-panel">
+    <div id="game-logs" class="space-y-1"></div>
+</div>
+
+<script>
+    /** FACTION DATA **/
+    const unitPool = {
+        'Imp': { name: 'Imp', tier: 1, cost: 1, atk: 2, hp: 1, maxHp: 1, special: 'Volatile: Deals 1 damage to a random enemy on death.' },
+        'Hellhound': { name: 'Hellhound', tier: 1, cost: 1, atk: 1, hp: 2, maxHp: 2, special: 'Bloodscent: Double damage if enemy retreats (Not simulated in 2D).' },
+        'Felguard': { name: 'Felguard', tier: 2, cost: 2, atk: 5, hp: 8, maxHp: 8, special: 'Cleave: Hits two targets.' },
+        'Succubus': { name: 'Succubus', tier: 2, cost: 2, atk: 3, hp: 7, maxHp: 7, special: 'Whip: Silences one enemy unit.' },
+        'Pit Lord': { name: 'Pit Lord', tier: 3, cost: 3, atk: 12, hp: 10, maxHp: 10, special: 'Crush: Always hits highest HP enemy.' },
+        'Infernal': { name: 'Infernal', tier: 3, cost: 3, atk: 10, hp: 13, maxHp: 13, special: 'Immolation: Deals 1 damage to all enemies at start of round.' }
+    };
+
+    let state = {
+        turn: 1,
+        fuel: 5,
+        gateTier: 1,
+        capacityUsed: 0,
+        warlord: { atk: 3, hp: 3, maxHp: 3 },
+        army: [],
+        warpQueue: [],
+        idleTurns: 0,
+        enemy: null,
+        isSacrificing: false
+    };
+
+    /** CORE LOGIC **/
+    function log(msg, color = 'text-slate-400') {
+        const l = document.getElementById('game-logs');
+        const e = document.createElement('div');
+        e.className = color + ' text-[10px] font-mono';
+        e.innerText = `[T${state.turn}] > ${msg}`;
+        l.prepend(e);
+    }
+
+    function upgradeGate() {
+        const costs = [0, 10, 25];
+        const nextCost = costs[state.gateTier];
+        if (state.fuel >= nextCost) {
+            state.fuel -= nextCost;
+            state.gateTier++;
+            log(`The Hellgate intensifies to Tier ${state.gateTier}.`, 'text-red-500');
+            render();
+        }
+    }
+
+    function spawnUnit(type) {
+        const u = unitPool[type];
+        if (state.capacityUsed + u.cost <= state.gateTier) {
+            state.capacityUsed += u.cost;
+            state.warpQueue.push({ ...u, id: Math.random(), turnsLeft: 1 });
+            log(`${u.name} summoned to the Warp Queue.`, 'text-orange-400');
+            render();
+        }
+    }
+
+    function enterSacrificeMode() {
+        if (state.army.length === 0) return;
+        state.isSacrificing = !state.isSacrificing;
+        log(state.isSacrificing ? "You must select a unit from your army to sacrifice." : "Sacrificial rite cancelled.", 'text-red-400');
+        render();
+    }
+
+    function performSacrifice(unitId) {
+        if (!state.isSacrificing) return;
+        const idx = state.army.findIndex(u => u.id === unitId);
+        const unit = state.army[idx];
+
+        // Gains: Small +1/+2, Med +2/+4, Large +4/+8
+        let gainAtk = 1, gainHp = 2;
+        if (unit.tier === 2) { gainAtk = 2; gainHp = 4; }
+        if (unit.tier === 3) { gainAtk = 4; gainHp = 8; }
+
+        state.warlord.atk += gainAtk;
+        state.warlord.maxHp += gainHp;
+        state.warlord.hp += gainHp;
+        state.army.splice(idx, 1);
+        state.isSacrificing = false;
+
+        log(`The Warlord consumes the ${unit.name}. Power grows!`, 'text-orange-500 font-bold');
+        render();
+    }
+
+    function scoutEnemy() {
+        if (state.enemy) return;
+        const totalPlayerPower = state.army.reduce((s, u) => s + u.atk, 0) + state.warlord.atk;
+        const difficulty = Math.max(5, Math.floor(totalPlayerPower * 0.9));
+
+        state.enemy = {
+            power: difficulty,
+            hp: difficulty * 1.5,
+            name: "Holy Bastion"
+        };
+
+        document.getElementById('conflict-screen').classList.remove('hidden');
+        document.getElementById('conf-p-pwr').innerText = totalPlayerPower;
+        document.getElementById('conf-e-pwr').innerText = String(difficulty);
+        log(`The Warlord senses prey: ${state.enemy.name} detected nearby.`, 'text-red-600 font-bold');
+    }
+
+    function resolveCombat() {
+        const playerPower = state.army.reduce((s, u) => s + u.atk, 0) + state.warlord.atk;
+        const enemyPower = state.enemy.power;
+
+        // Player deals damage
+        state.enemy.hp -= playerPower;
+        // Player takes damage bill
+        let damageBill = enemyPower;
+
+        // Auto-allocation for 2D simplicity (Sacrifice cheapest/weakest first)
+        state.army.sort((a,b) => a.hp - b.hp);
+        while (damageBill > 0 && state.army.length > 0) {
+            const u = state.army[0];
+            const absorb = Math.min(u.hp, damageBill);
+            u.hp -= absorb;
+            damageBill -= absorb;
+            if (u.hp <= 0) state.army.shift();
+        }
+
+        // Warlord takes remaining damage
+        if (damageBill > 0) {
+            state.warlord.hp -= damageBill;
+            if (state.warlord.hp < 0) state.warlord.hp = 0;
+        }
+
+        if (state.enemy.hp <= 0) {
+            const fuelGain = Math.floor(state.enemy.power / 2);
+            state.fuel += fuelGain;
+            state.enemy = null;
+            state.idleTurns = 0; // Reset Bloodlust
+            log(`Victory! Consumed enemies for ${fuelGain} Fuel.`, 'text-green-500');
+            document.getElementById('conflict-screen').classList.add('hidden');
+        } else {
+            log(`The battle rages on... Remaining enemy HP: ${Math.floor(state.enemy.hp)}`, 'text-slate-500');
+            document.getElementById('conf-e-pwr').innerText = String(Math.floor(state.enemy.hp));
+        }
+
+        if (state.warlord.hp <= 0) {
+            alert("The Warlord has fallen! You must wait 2 turns to respawn at the gate.");
+            state.warlord.hp = 0;
+            // Simplified death logic
+        }
+
+        render();
+    }
+
+    function endTurn() {
+        // Process Warp Queue
+        const arrived = state.warpQueue.filter(u => u.turnsLeft <= 1);
+        state.warpQueue = state.warpQueue.filter(u => u.turnsLeft > 1);
+        arrived.forEach(u => state.army.push({ ...u, hp: u.maxHp }));
+
+        state.warpQueue.forEach(u => u.turnsLeft--);
+
+        // Bloodlust Logic
+        if (!state.enemy) {
+            state.idleTurns++;
+            if (state.idleTurns >= 4) {
+                const totalP = state.army.reduce((s, u) => s + u.atk, 0) + state.warlord.atk;
+                const civilWarDmg = Math.floor(totalP * 0.2);
+                log(`CIVIL WAR! Idle too long. Internal carnage deals ${civilWarDmg} damage.`, 'text-red-500 font-black');
+                // Allocate self damage
+                let bill = civilWarDmg;
+                while (bill > 0 && state.army.length > 0) {
+                    const u = state.army[0];
+                    const absorb = Math.min(u.hp, bill);
+                    u.hp -= absorb; bill -= absorb;
+                    if (u.hp <= 0) state.army.shift();
+                }
+            }
+        }
+
+        state.turn++;
+        state.capacityUsed = 0;
+        render();
+        log(`Cycle ${state.turn} initialized. Reinforcements arrived: ${arrived.length}.`);
+    }
+
+    function render() {
+        // UI Updates
+        document.getElementById('ui-turn').innerText = state.turn;
+        document.getElementById('ui-fuel').innerText = state.fuel;
+        document.getElementById('ui-gate-tier').innerText = ["", "I", "II", "III"][state.gateTier];
+        document.getElementById('ui-capacity').innerText = `CAPACITY: ${state.capacityUsed}/${state.gateTier}`;
+
+        document.getElementById('wl-atk').innerText = `${state.warlord.atk}⚔`;
+        document.getElementById('wl-hp').innerText = `${state.warlord.hp} / ${state.warlord.maxHp} ♥`;
+
+        document.getElementById('total-power').innerText = state.army.reduce((s, u) => s + u.atk, 0) + state.warlord.atk;
+
+        // Bloodlust Bar
+        const bar = document.getElementById('lust-bar');
+        const status = document.getElementById('lust-status');
+        const desc = document.getElementById('lust-desc');
+        const pct = Math.max(0, 100 - (state.idleTurns * 25));
+        bar.style.width = pct + '%';
+
+        if (state.idleTurns === 0) {
+            status.innerText = "Sated"; status.className = "text-green-500";
+            desc.innerText = "The Legion is sated. Internal order is maintained.";
+        } else if (state.idleTurns < 3) {
+            status.innerText = "Restless"; status.className = "text-orange-400";
+            desc.innerText = "The units hunger for battle. Movement speed is twitching.";
+        } else {
+            status.innerText = "Civil War Imminent"; status.className = "text-red-600 font-black";
+            desc.innerText = "Carnage must be dealt immediately or the legion will devour itself!";
+        }
+
+        // Army Grid
+        const armyGrid = document.getElementById('army-grid');
+        armyGrid.innerHTML = '';
+        state.army.forEach(u => {
+            const card = document.createElement('div');
+            card.className = `glass-panel p-4 rounded cursor-pointer unit-card ${state.isSacrificing ? 'border-red-500 border-2 pulsing-red' : ''}`;
+            card.onclick = () => performSacrifice(u.id);
+            card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-black uppercase text-xs">${u.name}</span>
+                        <span class="text-xs font-mono text-orange-400">${u.atk}⚔</span>
+                    </div>
+                    <div class="blood-bar mb-2">
+                        <div class="blood-fill" style="width: ${(u.hp/u.maxHp)*100}%"></div>
+                    </div>
+                    <p class="text-[9px] text-slate-500 leading-tight">${u.special}</p>
+                `;
+            armyGrid.appendChild(card);
+        });
+
+        // Warp Queue
+        const warpList = document.getElementById('warp-list');
+        warpList.innerHTML = '';
+        if (state.warpQueue.length === 0) {
+            warpList.innerHTML = '<div class="text-xs text-slate-600 italic">Portal is silent...</div>';
+        } else {
+            state.warpQueue.forEach(u => {
+                const d = document.createElement('div');
+                d.className = "bg-red-950/20 p-2 rounded border border-white/5 flex justify-between text-[10px]";
+                d.innerHTML = `<span>${u.name}</span><span class="text-red-400">WARPING...</span>`;
+                warpList.appendChild(d);
+            });
+        }
+
+        // Recruitment List
+        const recList = document.getElementById('recruitment-list');
+        recList.innerHTML = '';
+        Object.values(unitPool).forEach(u => {
+            if (u.tier > state.gateTier) return;
+            const btn = document.createElement('button');
+            btn.className = "demon-btn w-full p-3 rounded flex justify-between items-center text-left";
+            btn.disabled = (state.capacityUsed + u.cost > state.gateTier);
+            btn.onclick = () => spawnUnit(u.name);
+            btn.innerHTML = `
+                    <div>
+                        <div class="text-[10px] font-black uppercase tracking-tight">${u.name}</div>
+                        <div class="text-[9px] text-slate-500">Tier ${u.tier} Vessel</div>
+                    </div>
+                    <div class="text-[10px] font-mono bg-red-900/30 px-2 py-1 rounded">Cost: ${u.cost}</div>
+                `;
+            recList.appendChild(btn);
+        });
+
+        // Upgrade Button
+        const costs = [0, 10, 25];
+        const upCost = costs[state.gateTier] || "MAX";
+        document.getElementById('upgrade-cost').innerText = `Cost: ${upCost} Fuel`;
+        document.getElementById('btn-upgrade').disabled = (state.fuel < upCost || state.gateTier >= 3);
+
+        // Scout Button
+        document.getElementById('btn-scout').disabled = (state.enemy !== null);
+    }
+
+    window.onload = render;
+</script>
+</body>
+</html>

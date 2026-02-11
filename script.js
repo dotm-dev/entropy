@@ -24,7 +24,13 @@ const manifest = [
         name: "The Humans",
         description: "Bastion defense and standing army organization.",
         palette: { primary: "#3b82f6", secondary: "#fbbf24", accent: "#ffffff" },
-        simulators: []
+        simulators: [
+            {
+            title: "Humans Management Hub",
+            file: "humans/humans.html",
+            tags: ["2D", "Strategic", "Core"],
+            description: "Tactical interface for managing Silver & Corn, military units, and complexity."
+        }]
     },
     {
         id: "demons",
