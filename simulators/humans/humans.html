@@ -7,140 +7,249 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/humans.style.css">
 </head>
-<body class="text-slate-100 p-4 md:p-8">
-<div class="max-w-4xl mx-auto space-y-6">
+<body class="text-slate-100 p-2 md:p-6">
 
-    <!-- Header -->
-    <div class="flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-        <div>
-            <h1 class="text-2xl font-bold text-amber-500">Humanity Faction Sim</h1>
-            <p class="text-slate-400 text-sm">"We do not break."</p>
+<!-- Configuration Modal (Popup) -->
+<div id="config-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-2xl space-y-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold flex items-center gap-2 text-indigo-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Simulation Settings
+            </h2>
+            <button onclick="actions.toggleConfig()" class="text-slate-500 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
         </div>
-        <div class="text-right">
-            <div class="text-sm text-slate-500 uppercase tracking-widest">Turn</div>
-            <div id="turn-display" class="text-4xl font-black text-white">1</div>
+
+        <!-- Tab Buttons -->
+        <div class="flex border-b border-slate-700">
+            <button onclick="actions.switchTab('resources')" id="tab-btn-resources" class="px-4 py-2 text-sm font-bold border-b-2 border-indigo-500 text-indigo-400">Initial Resources</button>
+            <button onclick="actions.switchTab('params')" id="tab-btn-params" class="px-4 py-2 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-300">Internal Parameters</button>
+        </div>
+
+        <!-- Tab 1: Resources -->
+        <div id="tab-resources" class="tab-content active">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Silver</label>
+                    <input type="number" id="init-silver" value="300" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Houses</label>
+                    <input type="number" id="init-houses" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Farms</label>
+                    <input type="number" id="init-farms" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Peasants</label>
+                    <input type="number" id="init-peasants" value="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Parameters -->
+        <div id="tab-params" class="tab-content">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1">
+                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Costs (🪙)</span>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">House</label>
+                    <input type="number" id="cfg-house-cost" value="150" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Farm</label>
+                    <input type="number" id="cfg-farm-cost" value="200" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Draft</label>
+                    <input type="number" id="cfg-draft-cost" value="50" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Specialization</label>
+                    <input type="number" id="cfg-spec-cost" value="200" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1 mt-2">
+                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Economy & Capacity</span>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Peasant Income</label>
+                    <input type="number" id="cfg-peasant-inc" value="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Militia Income</label>
+                    <input type="number" id="cfg-militia-inc" value="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Farm Capacity</label>
+                    <input type="number" id="cfg-farm-cap" value="150" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1 mt-2">
+                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Corn Consumption (🌽)</span>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Peasant</label>
+                    <input type="number" id="cfg-peasant-corn" value="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Militia</label>
+                    <input type="number" id="cfg-militia-corn" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Mid-Tier</label>
+                    <input type="number" id="cfg-mid-corn" value="30" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <button onclick="actions.applyAndRestart()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-900/20 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                Apply & Reset Sim
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto space-y-3">
+
+    <!-- Top Bar -->
+    <div class="flex justify-between items-center px-1">
+        <button onclick="actions.toggleConfig()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-all border border-slate-700 shadow-sm" title="Settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <div class="flex items-center gap-3 bg-slate-800 px-4 py-1.5 rounded-xl border border-slate-700 shadow-sm">
+            <span class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Turn</span>
+            <span id="turn-display" class="text-xl font-black text-white">1</span>
         </div>
     </div>
 
     <!-- Resources Row -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Silver -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-amber-500/20 rounded-lg text-amber-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-400 uppercase">Silver</p>
-                    <p id="silver-display" class="text-xl font-bold text-white">300 🪙</p>
+                    <p class="text-[9px] text-slate-500 uppercase font-bold">Silver</p>
+                    <p id="silver-display" class="text-lg font-bold text-white leading-none">300 🪙</p>
                 </div>
             </div>
-            <div id="income-display" class="text-xs text-green-400">+24/turn</div>
+            <div id="income-display" class="text-xs text-green-400 font-bold">+24</div>
         </div>
 
-        <!-- Corn -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-yellow-500/20 rounded-lg text-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20a7 7 0 0 1-7-7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v13.5a.5.5 0 0 0 1 0V11a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H11Z"/></svg>
+                <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20a7 7 0 0 1-7-7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v13.5a.5.5 0 0 0 1 0V11a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H11Z"/></svg>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-400 uppercase">Corn Capacity</p>
-                    <p id="corn-display" class="text-xl font-bold text-white">15 / 150 🌽</p>
+                    <p class="text-[9px] text-slate-500 uppercase font-bold">Corn</p>
+                    <p id="corn-display" class="text-lg font-bold text-white leading-none">15 / 150</p>
                 </div>
             </div>
-            <div id="corn-free-display" class="text-xs text-green-400">135 free</div>
+            <div id="corn-free-display" class="text-xs text-green-400 font-bold">135</div>
         </div>
 
-        <!-- Population -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-blue-500/20 rounded-lg text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <div class="p-2 bg-blue-500/10 rounded-lg text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-400 uppercase">Population</p>
-                    <p id="pop-display" class="text-xl font-bold text-white">3 / 5</p>
+                    <p class="text-[9px] text-slate-500 uppercase font-bold">Settlement</p>
+                    <p id="pop-display" class="text-lg font-bold text-white leading-none">3 / 5</p>
                 </div>
             </div>
-            <div id="house-count-display" class="text-xs text-slate-400">1 Houses</div>
+            <div id="house-count-display" class="text-xs text-slate-500 font-medium">1 House</div>
         </div>
     </div>
 
-    <!-- Action Panel -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-green-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                Management Actions
-            </h2>
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="actions.buildHouse()" id="btn-house" class="flex items-center justify-between p-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors group">
-                    <span class="flex items-center gap-2 font-medium">Construct House</span>
-                    <span class="text-amber-400 font-bold">150 🪙</span>
-                </button>
-                <button onclick="actions.buildFarm()" id="btn-farm" class="flex items-center justify-between p-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="flex items-center gap-2 font-medium">Construct Farm</span>
-                    <span class="text-amber-400 font-bold">200 🪙</span>
-                </button>
-                <div class="h-px bg-slate-700 my-2"></div>
-                <button onclick="actions.draft()" id="btn-draft" class="flex items-center justify-between p-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="flex items-center gap-2 font-medium">The Draft</span>
-                    <span class="flex gap-2 items-center">
-                            <span class="text-amber-400 font-bold">50 🪙</span>
-                            <span class="text-yellow-500 text-xs">5 🌽 cap</span>
-                        </span>
-                </button>
-                <button onclick="actions.specialize()" id="btn-spec" class="flex items-center justify-between p-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="flex items-center gap-2 font-medium">Train Soldier</span>
-                    <span class="flex gap-2 items-center">
-                            <span class="text-amber-400 font-bold">200 🪙</span>
-                            <span class="text-yellow-500 text-xs">20 🌽 cap</span>
-                        </span>
-                </button>
-            </div>
-
-            <button onclick="actions.nextTurn()" class="w-full mt-6 py-4 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl shadow-lg shadow-amber-900/20 flex items-center justify-center gap-2 group transition-all">
-                End Turn
-                <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-        </div>
-
-        <!-- Logs -->
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 flex flex-col h-[340px]">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                Town Log
-            </h2>
-            <div id="log-container" class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                <!-- Logs injected here -->
-            </div>
-            <button onclick="actions.reset()" class="mt-4 text-xs text-slate-500 hover:text-slate-300 flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-                Reset Simulation
-            </button>
+    <!-- Infrastructure -->
+    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow-md">
+        <h2 class="text-[10px] font-bold mb-2 flex items-center gap-2 text-indigo-400 uppercase tracking-widest">
+            Infrastructure
+        </h2>
+        <div id="infrastructure-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2 max-h-[140px] overflow-y-auto pr-1 custom-scrollbar">
+            <!-- Houses/Farms -->
         </div>
     </div>
 
-    <!-- Army Breakdown -->
-    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-        <h2 class="text-lg font-semibold mb-4">Army Roster</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="p-4 bg-slate-900 rounded-xl">
-                <div id="peasant-count" class="text-2xl font-bold">3</div>
-                <div class="text-xs uppercase text-slate-500 tracking-wider">Peasants</div>
+    <!-- Actions & History -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
+            <h2 class="text-[10px] font-bold mb-3 flex items-center gap-2 text-green-400 uppercase tracking-widest">
+                Orders
+            </h2>
+            <div class="grid grid-cols-1 gap-1.5">
+                <button onclick="actions.buildHouse()" id="btn-house" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors group">
+                    <span class="text-xs font-semibold">House</span>
+                    <span id="btn-house-label" class="text-amber-400 font-bold text-xs">150 🪙</span>
+                </button>
+                <button onclick="actions.buildFarm()" id="btn-farm" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
+                    <span class="text-xs font-semibold">Farm</span>
+                    <span id="btn-farm-label" class="text-amber-400 font-bold text-xs">200 🪙</span>
+                </button>
+                <div class="h-px bg-slate-700 my-0.5"></div>
+                <button onclick="actions.draft()" id="btn-draft" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
+                    <span class="text-xs font-semibold">Draft Militia</span>
+                    <span class="flex gap-2 items-center">
+                            <span id="btn-draft-label" class="text-amber-400 font-bold text-xs">50 🪙</span>
+                            <span id="btn-draft-corn" class="text-yellow-500 text-[9px] font-bold">5 🌽</span>
+                        </span>
+                </button>
+                <button onclick="actions.specialize()" id="btn-spec" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
+                    <span class="text-xs font-semibold">Specialize</span>
+                    <span class="flex gap-2 items-center">
+                            <span id="btn-spec-label" class="text-amber-400 font-bold text-xs">200 🪙</span>
+                            <span id="btn-spec-corn" class="text-yellow-500 text-[9px] font-bold">20 🌽</span>
+                        </span>
+                </button>
+                <button onclick="actions.nextTurn()" class="w-full mt-2 py-3 bg-amber-600 hover:bg-amber-500 text-white font-black text-sm rounded-xl shadow-lg shadow-amber-900/20 flex items-center justify-center gap-2 group transition-all">
+                    End Turn
+                    <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
             </div>
-            <div class="p-4 bg-slate-900 rounded-xl">
-                <div id="militia-count" class="text-2xl font-bold">0</div>
-                <div class="text-xs uppercase text-slate-500 tracking-wider">Militia</div>
+        </div>
+
+        <!-- History -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[270px] shadow-md">
+            <h2 class="text-[10px] font-bold mb-2 flex items-center gap-2 text-indigo-400 uppercase tracking-widest">
+                Town History
+            </h2>
+            <div id="log-container" class="flex-1 overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
+                <!-- Logs -->
             </div>
-            <div class="p-4 bg-slate-900 rounded-xl border border-blue-500/30">
-                <div id="soldier-count" class="text-2xl font-bold">0</div>
-                <div class="text-xs uppercase text-slate-500 tracking-wider">Mid-Tier</div>
+        </div>
+    </div>
+
+    <!-- Army Roster -->
+    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
+        <h2 class="text-[10px] font-bold mb-3 text-blue-400 flex items-center gap-2 uppercase tracking-widest">
+            Army Roster
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-slate-700/50">
+                <div id="peasant-count" class="text-xl font-black">3</div>
+                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Peasants</div>
             </div>
-            <div class="p-4 bg-slate-900 rounded-xl border border-amber-500/30">
-                <div class="text-2xl font-bold">0</div>
-                <div class="text-xs uppercase text-slate-500 tracking-wider">Advanced</div>
+            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-slate-700/50">
+                <div id="militia-count" class="text-xl font-black text-amber-500">0</div>
+                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Militia</div>
+            </div>
+            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-blue-500/20">
+                <div id="soldier-count" class="text-xl font-black text-blue-400">0</div>
+                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Soldiers</div>
+            </div>
+            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-amber-500/20">
+                <div class="text-xl font-black text-amber-600 opacity-50">0</div>
+                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider opacity-50">Advanced</div>
             </div>
         </div>
     </div>
