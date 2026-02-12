@@ -16,10 +16,14 @@ body {
     border-radius: 10px;
 }
 
+/* Hide standard number arrows */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 #config-modal {
@@ -34,4 +38,53 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .tab-content.active {
     display: block;
+}
+
+/* Custom Spinner Styles */
+.spinner-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #020617;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    width: 110px; /* Short length */
+}
+
+.spinner-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 24px; /* Shorter vertically */
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-minus {
+    background-color: #475569; /* bg-slate-600 */
+}
+.btn-minus:hover { background-color: #64748b; }
+.btn-minus:active { background-color: #be123c; }
+
+.btn-plus {
+    background-color: #4f46e5; /* bg-indigo-600 */
+}
+.btn-plus:hover { background-color: #6366f1; }
+.btn-plus:active { background-color: #059669; }
+
+.spinner-input {
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    outline: none;
 }

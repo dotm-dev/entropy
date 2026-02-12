@@ -9,12 +9,12 @@
 </head>
 <body class="text-slate-100 p-2 md:p-6">
 
-<!-- Configuration Modal (Popup) -->
+<!-- Configuration Modal -->
 <div id="config-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4">
     <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-2xl space-y-6">
         <div class="flex justify-between items-center">
             <h2 class="text-xl font-bold flex items-center gap-2 text-indigo-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 Simulation Settings
             </h2>
             <button onclick="actions.toggleConfig()" class="text-slate-500 hover:text-white transition-colors">
@@ -22,7 +22,6 @@
             </button>
         </div>
 
-        <!-- Tab Buttons -->
         <div class="flex border-b border-slate-700">
             <button onclick="actions.switchTab('resources')" id="tab-btn-resources" class="px-4 py-2 text-sm font-bold border-b-2 border-indigo-500 text-indigo-400">Initial Resources</button>
             <button onclick="actions.switchTab('params')" id="tab-btn-params" class="px-4 py-2 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-300">Internal Parameters</button>
@@ -30,84 +29,157 @@
 
         <!-- Tab 1: Resources -->
         <div id="tab-resources" class="tab-content active">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 py-2">
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Silver</label>
-                    <input type="number" id="init-silver" value="300" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1 tracking-wider">Initial Silver</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('init-silver', -10)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="init-silver" value="300" class="spinner-input">
+                        <button onclick="actions.changeValue('init-silver', 10)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Houses</label>
-                    <input type="number" id="init-houses" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1 tracking-wider">Initial Houses</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('init-houses', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="init-houses" value="1" class="spinner-input">
+                        <button onclick="actions.changeValue('init-houses', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Farms</label>
-                    <input type="number" id="init-farms" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1 tracking-wider">Initial Farms</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('init-farms', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="init-farms" value="1" class="spinner-input">
+                        <button onclick="actions.changeValue('init-farms', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Initial Peasants</label>
-                    <input type="number" id="init-peasants" value="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1 tracking-wider">Initial Peasants</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('init-peasants', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="init-peasants" value="3" class="spinner-input">
+                        <button onclick="actions.changeValue('init-peasants', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Tab 2: Parameters -->
         <div id="tab-params" class="tab-content">
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
-                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1">
-                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Costs (🪙)</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar py-2">
+
+                <!-- CAPACITY Section -->
+                <div class="col-span-full border-b border-slate-700/50 pb-1">
+                    <span class="text-[9px] text-amber-400 font-black uppercase tracking-widest px-1">Capacity</span>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">House</label>
-                    <input type="number" id="cfg-house-cost" value="150" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Farm</label>
-                    <input type="number" id="cfg-farm-cost" value="200" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Draft</label>
-                    <input type="number" id="cfg-draft-cost" value="50" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Specialization</label>
-                    <input type="number" id="cfg-spec-cost" value="200" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">House Cap</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-house-cap', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-house-cap" value="5" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-house-cap', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
 
-                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1 mt-2">
-                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Economy & Capacity</span>
+                <!-- COSTS Section -->
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mt-2">
+                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest px-1">Costs</span>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Peasant Income</label>
-                    <input type="number" id="cfg-peasant-inc" value="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">House</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-house-cost', -10)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-house-cost" value="150" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-house-cost', 10)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Militia Income</label>
-                    <input type="number" id="cfg-militia-inc" value="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Farm</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-farm-cost', -10)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-farm-cost" value="200" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-farm-cost', 10)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Farm Capacity</label>
-                    <input type="number" id="cfg-farm-cap" value="150" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Draft</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-draft-cost', -5)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-draft-cost" value="50" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-draft-cost', 5)" class="spinner-btn btn-plus">+</button>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Specialization</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-spec-cost', -10)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-spec-cost" value="200" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-spec-cost', 10)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
 
-                <div class="col-span-full border-b border-slate-700/50 pb-1 mb-1 mt-2">
-                    <span class="text-[9px] text-indigo-400 font-black uppercase tracking-widest">Corn Consumption (🌽)</span>
+                <!-- INCOME Section -->
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mt-2">
+                    <span class="text-[9px] text-emerald-400 font-black uppercase tracking-widest px-1">Income</span>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Peasant</label>
-                    <input type="number" id="cfg-peasant-corn" value="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Peasant</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-peasant-inc', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-peasant-inc" value="8" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-peasant-inc', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Militia</label>
-                    <input type="number" id="cfg-militia-corn" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Militia</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-militia-inc', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-militia-inc" value="3" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-militia-inc', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Mid-Tier</label>
-                    <input type="number" id="cfg-mid-corn" value="30" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Farm (Corn Cap)</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-farm-cap', -10)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-farm-cap" value="150" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-farm-cap', 10)" class="spinner-btn btn-plus">+</button>
+                    </div>
+                </div>
+
+                <!-- CONSUMPTION Section -->
+                <div class="col-span-full border-b border-slate-700/50 pb-1 mt-2">
+                    <span class="text-[9px] text-rose-400 font-black uppercase tracking-widest px-1">Consumption</span>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Peasant</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-peasant-corn', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-peasant-corn" value="5" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-peasant-corn', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Militia</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-militia-corn', -1)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-militia-corn" value="10" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-militia-corn', 1)" class="spinner-btn btn-plus">+</button>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold px-1">Mid-Tier</label>
+                    <div class="spinner-container">
+                        <button onclick="actions.changeValue('cfg-mid-corn', -5)" class="spinner-btn btn-minus">-</button>
+                        <input type="number" id="cfg-mid-corn" value="30" class="spinner-input">
+                        <button onclick="actions.changeValue('cfg-mid-corn', 5)" class="spinner-btn btn-plus">+</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="pt-4">
+        <div class="pt-2">
             <button onclick="actions.applyAndRestart()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-900/20 flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
                 Apply & Reset Sim
@@ -117,11 +189,10 @@
 </div>
 
 <div class="max-w-4xl mx-auto space-y-3">
-
     <!-- Top Bar -->
     <div class="flex justify-between items-center px-1">
         <button onclick="actions.toggleConfig()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-all border border-slate-700 shadow-sm" title="Settings">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
         <div class="flex items-center gap-3 bg-slate-800 px-4 py-1.5 rounded-xl border border-slate-700 shadow-sm">
             <span class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Turn</span>
@@ -143,7 +214,6 @@
             </div>
             <div id="income-display" class="text-xs text-green-400 font-bold">+24</div>
         </div>
-
         <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-500">
@@ -156,18 +226,17 @@
             </div>
             <div id="corn-free-display" class="text-xs text-green-400 font-bold">135</div>
         </div>
-
         <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-blue-500/10 rounded-lg text-blue-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
                 <div>
-                    <p class="text-[9px] text-slate-500 uppercase font-bold">Settlement</p>
+                    <p class="text-[9px] text-slate-500 uppercase font-bold text-blue-400">Housed</p>
                     <p id="pop-display" class="text-lg font-bold text-white leading-none">3 / 5</p>
                 </div>
             </div>
-            <div id="house-count-display" class="text-xs text-slate-500 font-medium">1 House</div>
+            <div id="house-count-display" class="text-xs text-slate-500 font-medium whitespace-nowrap">1 House</div>
         </div>
     </div>
 
@@ -176,36 +245,35 @@
         <h2 class="text-[10px] font-bold mb-2 flex items-center gap-2 text-indigo-400 uppercase tracking-widest">
             Infrastructure
         </h2>
-        <div id="infrastructure-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2 max-h-[140px] overflow-y-auto pr-1 custom-scrollbar">
-            <!-- Houses/Farms -->
+        <div id="infrastructure-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2 max-h-[140px] overflow-y-auto pr-1 custom-scrollbar text-center">
         </div>
     </div>
 
-    <!-- Actions & History -->
+    <!-- Orders & Army Roster -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md flex flex-col justify-between">
             <h2 class="text-[10px] font-bold mb-3 flex items-center gap-2 text-green-400 uppercase tracking-widest">
                 Orders
             </h2>
-            <div class="grid grid-cols-1 gap-1.5">
+            <div class="grid grid-cols-1 gap-1.5 flex-1">
                 <button onclick="actions.buildHouse()" id="btn-house" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors group">
-                    <span class="text-xs font-semibold">House</span>
+                    <span class="text-xs font-semibold text-slate-300">House</span>
                     <span id="btn-house-label" class="text-amber-400 font-bold text-xs">150 🪙</span>
                 </button>
                 <button onclick="actions.buildFarm()" id="btn-farm" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="text-xs font-semibold">Farm</span>
+                    <span class="text-xs font-semibold text-slate-300">Farm</span>
                     <span id="btn-farm-label" class="text-amber-400 font-bold text-xs">200 🪙</span>
                 </button>
                 <div class="h-px bg-slate-700 my-0.5"></div>
                 <button onclick="actions.draft()" id="btn-draft" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="text-xs font-semibold">Draft Militia</span>
+                    <span class="text-xs font-semibold text-slate-300">Draft Militia</span>
                     <span class="flex gap-2 items-center">
                             <span id="btn-draft-label" class="text-amber-400 font-bold text-xs">50 🪙</span>
                             <span id="btn-draft-corn" class="text-yellow-500 text-[9px] font-bold">5 🌽</span>
                         </span>
                 </button>
                 <button onclick="actions.specialize()" id="btn-spec" class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors">
-                    <span class="text-xs font-semibold">Specialize</span>
+                    <span class="text-xs font-semibold text-slate-300">Specialize</span>
                     <span class="flex gap-2 items-center">
                             <span id="btn-spec-label" class="text-amber-400 font-bold text-xs">200 🪙</span>
                             <span id="btn-spec-corn" class="text-yellow-500 text-[9px] font-bold">20 🌽</span>
@@ -218,42 +286,39 @@
             </div>
         </div>
 
-        <!-- History -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[270px] shadow-md">
-            <h2 class="text-[10px] font-bold mb-2 flex items-center gap-2 text-indigo-400 uppercase tracking-widest">
-                Town History
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md flex flex-col h-[280px]">
+            <h2 class="text-[10px] font-bold mb-3 text-blue-400 flex items-center gap-2 uppercase tracking-widest">
+                Army Roster
             </h2>
-            <div id="log-container" class="flex-1 overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
-                <!-- Logs -->
+            <div class="grid grid-cols-2 gap-3 flex-1">
+                <div class="p-3 bg-slate-900 rounded-xl flex flex-col justify-center border border-slate-700/50 shadow-inner text-center">
+                    <div id="peasant-count" class="text-2xl font-black">3</div>
+                    <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Peasants</div>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl flex flex-col justify-center border border-slate-700/50 shadow-inner text-center">
+                    <div id="militia-count" class="text-2xl font-black text-amber-500">0</div>
+                    <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Militia</div>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl flex flex-col justify-center border border-blue-500/20 shadow-inner text-center">
+                    <div id="soldier-count" class="text-2xl font-black text-blue-400">0</div>
+                    <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Soldiers</div>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl flex flex-col justify-center border border-amber-500/20 shadow-inner text-center">
+                    <div class="text-2xl font-black text-amber-600 opacity-50">0</div>
+                    <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider opacity-50">Advanced</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Army Roster -->
-    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
-        <h2 class="text-[10px] font-bold mb-3 text-blue-400 flex items-center gap-2 uppercase tracking-widest">
-            Army Roster
+    <!-- Town History -->
+    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[180px] shadow-md">
+        <h2 class="text-[10px] font-bold mb-2 flex items-center gap-2 text-indigo-400 uppercase tracking-widest">
+            Town History
         </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-slate-700/50">
-                <div id="peasant-count" class="text-xl font-black">3</div>
-                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Peasants</div>
-            </div>
-            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-slate-700/50">
-                <div id="militia-count" class="text-xl font-black text-amber-500">0</div>
-                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Militia</div>
-            </div>
-            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-blue-500/20">
-                <div id="soldier-count" class="text-xl font-black text-blue-400">0</div>
-                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider">Soldiers</div>
-            </div>
-            <div class="p-2 bg-slate-900 rounded-lg flex flex-col justify-center border border-amber-500/20">
-                <div class="text-xl font-black text-amber-600 opacity-50">0</div>
-                <div class="text-[8px] uppercase text-slate-500 font-bold tracking-wider opacity-50">Advanced</div>
-            </div>
+        <div id="log-container" class="flex-1 overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
         </div>
     </div>
-
 </div>
 
 <script src="js/humans.script.js"></script>
