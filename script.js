@@ -110,7 +110,7 @@ function initPortal() {
                         <h2 class="faction-header text-4xl font-black" style="color: ${faction.palette.primary}">
                             ${faction.name}
                         </h2>
-                        <span class="text-slate-500 font-mono text-[10px] uppercase tracking-[0.3em] mb-2">
+                        <span class="text-slate-200 font-mono text-[10px] uppercase tracking-[0.3em] mb-2">
                             Status: ${hasSims ? 'Operational' : 'Inactive'}
                         </span>
                     </div>
@@ -146,9 +146,9 @@ function initPortal() {
                             </a>
                         `).join('') : `
                             <div class="glass-card p-10 opacity-20 grayscale border-dashed flex flex-col justify-center min-h-[200px]">
-                                <div class="text-slate-600 text-[10px] font-mono uppercase tracking-widest mb-4">Core Locked</div>
-                                <h3 class="text-xl font-bold text-slate-500 italic mb-2">No Active Simulation</h3>
-                                <p class="text-stone-700 text-xs font-mono">DATA_PENDING</p>
+                                <div class="text-slate-300 text-[10px] font-mono uppercase tracking-widest mb-4">Core Locked</div>
+                                <h3 class="text-xl font-bold text-slate-200 italic mb-2">No Active Simulation</h3>
+                                <p class="text-stone-400 text-xs font-mono">DATA_PENDING</p>
                             </div>
                         `}
                     </div>
